@@ -2,124 +2,127 @@
 
 // Задание №1
 
-for (let i = 0; i <= 10; i++) {
-    if (i == 0) {
-        console.log(i + ' - это ноль');
-    } else if (i % 2 == 0) {
-        console.log(i + ' - четное число');
-    } else {
-        console.log(i + ' - нечетное число');
+class NumberObj {
+
+    constructor(number) {
+        this.units = number % 10;
+        this.tens = Math.floor(number / 10) % 10;
+        this.hundereds = Math.floor(number / 100) % 10;
+        this.dataOut();
+    }
+
+    dataOut() {
+        console.log('Единицы: ' + this.units);
+        console.log('Десятки: ' + this.tens);
+        console.log('Сотни: ' + this.hundereds);
     }
 }
 
-// Задание №2
+let answer = Number(prompt('Введите целое число'));
 
-const post = {
-    author: "John", //вывести этот текст
-    postId: 23,
-    comments: [
-        {
-            userId: 10,
-            userName: "Alex",
-            text: "lorem ipsum",
-            rating: {
-                likes: 10,
-                dislikes: 2 //вывести это число
-            }
-        },
-        {
-            userId: 5, //вывести это число
-            userName: "Jane",
-            text: "lorem ipsum 2", //вывести этот текст
-            rating: {
-                likes: 3,
-                dislikes: 1
-            }
-        },
-    ]
+while (!(Number.isInteger(answer))) {
+    answer = Number(prompt('Вы ввели не целое число'));
+}
+
+let test = new NumberObj(answer);
+console.log(test);
+
+// Задание №1.1
+
+// es5
+function ProductEs5(name, price) {
+    this.name = name;
+    this.price = price;
+}
+
+ProductEs5.prototype.make25PercentDiscount = function() {
+    this.price *= 0.75;
 };
 
-console.log(post.author);
-console.log(post.comments[0].rating.dislikes);
-console.log(post.comments[1].userId);
-console.log(post.comments[1].text);
+let obj1Es5 = new ProductEs5('Яблоко', 123);
+console.log(obj1Es5);
 
-// Задание №3
+obj1Es5.make25PercentDiscount();
+console.log(obj1Es5);
 
-const products = [
-    {
-        id: 3,
-        price: 200,
-    },
-    {
-        id: 4,
-        price: 900,
-    },
-    {
-        id: 1,
-        price: 1000,
-    },
-];
+// es6
+class ProductEs6 {
 
-products.forEach(el => {
-    el.price *= 0.85;
-    console.log('Цена товара ID = ' + el.id + ' со скидкой 15% = ' + el.price);
-})
-
-// Задание №4
-
-const products1 = [
-    {
-        id: 3,
-        price: 127,
-        photos: [
-            "1.jpg",
-            "2.jpg",
-        ]
-    },
-    {
-        id: 5,
-        price: 499,
-        photos: []
-    },
-    {
-        id: 10,
-        price: 26,
-        photos: [
-            "3.jpg"
-        ]
-    },
-    {
-        id: 8,
-        price: 78,
-    },
-];
-
-let arr1 = products1.filter(el => {
-    if ('photos' in el) {
-        if (el.photos.length > 0) {
-            return el;
-        }
+    constructor(name, price) {
+        this.name = name;
+        this.price = price;
     }
-});
 
-let arr2 = products1.sort((a, b) => {
-    return a.price - b.price
-});
-
-console.log(arr1);
-console.log(arr2);
-
-// Задание №5
-
-function count (a) {
-    console.log(a);
+    make25PercentDiscount() {
+        this.price *= 0.75;
+    }
 }
 
-for (let i = 0; i < 10; count(i), i++);
+let obj1Es6 = new ProductEs6('Яблоко', 123);
+console.log(obj1Es6);
 
-// Задание №6
+obj1Es6.make25PercentDiscount();
+console.log(obj1Es6);
 
-for (let i = 1; i <= 20; i++) {
-    console.log('x'.repeat(i));
+// Задание 1.2
+
+// es5
+function PostEs5(author, text, date) {
+    this.author = author;
+    this.text = text;
+    this.date = date;
 }
+
+PostEs5.prototype.edit = function(newText) {
+    this.text = newText;
+};
+
+function AttachedPostEs5(author, text, date) {
+    PostEs5.call(this, author, text, date);
+    this.highlighted = false;
+}
+
+AttachedPostEs5.prototype = Object.create(PostEs5.prototype);
+AttachedPostEs5.prototype.constructor = AttachedPostEs5;
+
+AttachedPostEs5.prototype.makeTextHighlighted = function() {
+    this.highlighted = true;
+};
+
+let obj2Es5 = new AttachedPostEs5('Ivan', 'Lorem', '25.04.2002');
+console.log(obj2Es5);
+obj2Es5.edit('New Text');
+obj2Es5.makeTextHighlighted();
+console.log(obj2Es5);
+
+// es6
+class PostEs6 {
+
+    constructor(author, text, date) {
+        this.author = author;
+        this.text = text;
+        this.date = date;
+    }
+
+    edit(newText) {
+        this.text = newText;
+    }
+}
+
+class AttachedPostEs6 extends PostEs6 {
+
+    constructor(author, text, date) {
+        super(author, text, date);
+        this.highlighted = false;
+    }
+
+    makeTextHighlighted() {
+        this.highlighted = true;
+    }
+}
+
+let obj2Es6 = new AttachedPostEs6('Ivan', 'Lorem', '25.04.2002');
+console.log(obj2Es6);
+obj2Es6.edit('New Text');
+obj2Es6.makeTextHighlighted();
+console.log(obj2Es6);
